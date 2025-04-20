@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import axios from "./axios";
 import { Line } from "react-chartjs-2";
 import "chart.js/auto";
 import "./App.css";
@@ -58,7 +58,7 @@ const App = () => {
 
     try {
       const response = await axios.post(
-        "http://192.168.0.103:5000/predict",
+        "/predict",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
