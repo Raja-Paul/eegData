@@ -87,6 +87,7 @@ input[type="text"]:hover {
 .btn-submit {
   width: 100%;
   padding: 14px;
+  margin: 10px;
   background: linear-gradient(145deg, #007bff, #0056b3);
   color: #fff;
   font-size: 17px;
@@ -139,6 +140,7 @@ input[type="text"]:hover {
 }
 
 .error {
+  margin: 10px;
   background-color: #fdecea;
   color: #d9534f;
   border: 1px solid #f5c6cb;
