@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import axios from "./axios";
 import { Line } from "react-chartjs-2";
 import "chart.js/auto";
 import "./App.css";
+import SavedData  from "./saved_data"
 
 const App = () => {
+  const [subjectType, setSubjectType] = useState(null)
   const [eegFile, setEegFile] = useState(null);
   const [vmrkFile, setVmrkFile] = useState(null);
   const [vhdrFile, setVhdrFile] = useState(null);
@@ -41,13 +43,14 @@ const App = () => {
     setIsLoading(true);
     setEngagementIndex(null);
 
-    if (!eegFile || !vmrkFile || !vhdrFile || !eventDesc) {
-      setError("Please upload all files and provide an event description.");
+    if (!subjectType || !eegFile || !vmrkFile || !vhdrFile || !eventDesc) {
+      setError("Please upload all files and provide an event description and subject-type.");
       setIsLoading(false);
       return;
     }
 
     const formData = new FormData();
+    formData.append("type", subjectType)
     formData.append("eeg", eegFile);
     formData.append("vmrk", vmrkFile);
     formData.append("vhdr", vhdrFile);
@@ -55,7 +58,7 @@ const App = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/predict",
+        "/predict",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -151,8 +154,16 @@ const App = () => {
       <div className="top-bar">
         <h1>EEG Data Analysis</h1>
       </div>
-
       <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label>Subject type: (0 for VIP and 1 for NVIP)</label>
+          <input
+            type="text"
+            value={subjectType}
+            onChange={(e) => setSubjectType(e.target.value)}
+            placeholder="Enter Subject type"
+          />
+        </div>
         <div className="form-group">
           <label>EEG File:</label>
           <input
@@ -184,7 +195,7 @@ const App = () => {
           />
         </div>
         <button type="submit" className="btn-submit">
-          Submit
+          Process EEG
         </button>
       </form>
 
@@ -246,6 +257,8 @@ const App = () => {
           ))}
         </div>
       )}
+
+      <SavedData/>
     </div>
   );
 };
