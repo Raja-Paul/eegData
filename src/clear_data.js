@@ -8,25 +8,26 @@ const ClearData = () => {
     const [error, setError] = useState(null);
     const [showMsg, setShowMsg] = useState(false);
 
-
     useEffect(() => {
         if (showMsg) {
             const timer = setTimeout(() => {
                 setShowMsg(false);
                 setResult(null);
                 setError(null);
-            }, 4000);          // disappear after 4 secs
+            }, 4000); // Message disappears after 4 seconds
 
             return () => clearTimeout(timer);
         }
     }, [showMsg]);
 
-
     const handleClick = async (e) => {
         e.preventDefault();
-        const newIsClearing = !isClearing;
-        setIsClearing(newIsClearing);
-        if (!newIsClearing) return;
+
+        // Show confirmation popup
+        const confirmClear = window.confirm("Do you really want to clear the saved data from Database?");
+        if (!confirmClear) return;
+
+        setIsClearing(true);
 
         try {
             const res = await axios.delete(
@@ -39,24 +40,23 @@ const ClearData = () => {
             setShowMsg(true);
         } catch (err) {
             setError(err.response?.data?.error || "An error occurred.");
+            setShowMsg(true);
         } finally {
             setIsClearing(false);
         }
-
     };
-
 
     return (
         <div>
             <button
                 className="btn-submit"
                 onClick={handleClick}
+                disabled={isClearing}
             >
-                {isClearing ? "Clearing Saved Data....." : "Clear Saved data"}
+                {isClearing ? "Clearing Saved Data..." : "Clear Saved Data"}
             </button>
 
-            {!isClearing && showMsg && !result && error && <div className="error">Error: {error}</div>}
-
+            {!isClearing && showMsg && error && <div className="error">Error: {error}</div>}
             {!isClearing && showMsg && result && <div className="result">Data cleared successfully</div>}
         </div>
     );
