@@ -3,7 +3,8 @@ import axios from "./axios";
 import { Line } from "react-chartjs-2";
 import "chart.js/auto";
 import "./App.css";
-import SavedData  from "./saved_data"
+import SavedData  from "./saved_data";
+import ClearData from "./clear_data";
 
 const App = () => {
   const [subjectType, setSubjectType] = useState(null)
@@ -258,7 +259,9 @@ const App = () => {
         </div>
       )}
 
-      <SavedData/>
+      <SavedData />
+
+      <ClearData />
     </div>
   );
 };
